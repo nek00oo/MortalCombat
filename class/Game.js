@@ -10,18 +10,12 @@ class Game {
         this.form = root.querySelector('.control');
         this.logs = new Logs(chat);
 
-        this.player1 = new Player({
-            id: 1,
-            name: "CYRAX",
-            img: HERO_NAME.CYRAX,
-            rootSelector: "arenas"
-        });
+        this.player1 = new Player(JSON.parse(localStorage.getItem("player1")));
 
         this.player2 = new Player({
             id: 2,
             name: "NIGHTWOLF",
             img: HERO_NAME.NIGHTWOLF,
-            rootSelector: "arenas"
         })
     }
 
@@ -95,7 +89,7 @@ class Game {
         const reloadButtonElement = this.createReloadButton();
 
         reloadButtonElement.addEventListener("click", () => {
-            window.location.reload();
+            window.location.pathname = "MK/index.html";
         })
 
         if (this.player1.hp === 0 || this.player2.hp === 0) {
