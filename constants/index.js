@@ -52,7 +52,7 @@ export const HERO_NAME = {
     LIUKANG: "./assets/players/fightingStance/liukang.gif",
     MILEENA: "./assets/players/fightingStance/mileena.gif",
     MOTARO: "./assets/players/fightingStance/motaro.gif",
-    NIGTHWULF: "./assets/players/fightingStance/nigthwulf.gif",
+    NIGHTWOLF: "./assets/players/fightingStance/nightwolf.gif",
     NOOBSAIBOT: "./assets/players/fightingStance/noobsaibot.gif",
     RAIN: "./assets/players/fightingStance/rain.gif",
     REPTILE: "./assets/players/fightingStance/reptile.gif",

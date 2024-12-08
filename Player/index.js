@@ -1,13 +1,17 @@
 import {createHtmlElement} from "../utils";
 
 class Player {
-    constructor(props) {
-        this.id = props.id;
-        this.name = props.name;
-        this.hp = props.hp;
-        this.img = props.img;
+    constructor({
+                    id,
+                    name,
+                    img,
+                    hp,
+                }) {
+        this.id = id;
+        this.name = name;
+        this.img = img;
         this.selector = `player${this.id}`;
-        this.rootSelector = props.rootSelector;
+        this.hp = hp ? hp : 100;
     }
 
     changeHP = (damage) => {
@@ -37,9 +41,6 @@ class Player {
         const characterElement = createHtmlElement("div", "character", [imageElement])
         const progressbarElement = createHtmlElement("div", "progressbar", [lifeElement, nameElement])
         const playerElement = createHtmlElement("div", this.selector, [progressbarElement, characterElement])
-
-        const $root = document.querySelector(`.${this.rootSelector}`);
-        $root.appendChild(playerElement);
 
         return playerElement;
     }

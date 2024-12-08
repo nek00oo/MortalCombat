@@ -12,10 +12,10 @@ const chatElement = document.querySelector('.chat');
  * @param [damage]
  * @returns {*|string}
  */
-const actionLogResult = (actionType, { name: player1Name } = {}, { name: player2Name, hp } = {}, damage) => {
+const actionLogResult = (actionType, {name: player1Name} = {}, {name: player2Name, hp} = {}, damage) => {
     const formatTime = getTime()
 
-    const text = actionType === "start" || actionType ==="draw"
+    const text = actionType === "start" || actionType === "draw"
         ? LOGS[actionType]
         : LOGS[actionType][getRandomNumber(0, LOGS[actionType].length - 1)]
 
