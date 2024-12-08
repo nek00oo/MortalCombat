@@ -1,12 +1,14 @@
-import {generateLogs} from "../logs";
+import Logs from "./Logs.js";
 import {ATTACK, HERO_NAME, HIT} from "../constants";
 import {createHtmlElement, getRandomNumber} from "../utils";
-import Player from "../Player";
+import Player from "./Player.js";
+
 
 class Game {
-    constructor({root}) {
+    constructor({root, chat}) {
         this.root = root;
         this.form = root.querySelector('.control');
+        this.logs = new Logs(chat);
 
         this.player1 = new Player({
             id: 1,
@@ -29,7 +31,7 @@ class Game {
 
         this.submitResult();
 
-        generateLogs("start", this.player1, this.player2);
+        this.logs.generateLogs("start", this.player1, this.player2);
     }
 
     submitResult = () => {
@@ -43,7 +45,7 @@ class Game {
             this.roundResult(hitPlayer, defenceEnemy, this.player2, this.player1, valuePlayer);
 
             if (this.player1.hp === 0 || this.player2.hp === 0) {
-                this.showResult(this.player1, this.player2);
+                this.showResult();
             }
         });
     }
@@ -80,38 +82,38 @@ class Game {
 
     roundResult = (Hit, Defence, playerDefense, playerAttack, damage) => {
         if (Hit === Defence) {
-            generateLogs("defence", playerDefense, playerAttack);
+            this.logs.generateLogs("defence", playerDefense, playerAttack);
         } else {
             playerDefense.changeHP(damage);
             playerDefense.renderHP();
 
-            generateLogs("hit", playerAttack, playerDefense, damage);
+            this.logs.generateLogs("hit", playerAttack, playerDefense, damage);
         }
     }
 
-    showResult = (player1, player2) => {
+    showResult = () => {
         const reloadButtonElement = this.createReloadButton();
 
         reloadButtonElement.addEventListener("click", () => {
             window.location.reload();
         })
 
-        if (player1.hp === 0 || player2.hp === 0) {
+        if (this.player1.hp === 0 || this.player2.hp === 0) {
             reloadButtonElement.style.display = "block";
             for (let item of this.form) {
                 item.disabled = true;
             }
         }
 
-        if (player1.hp <= 0 && player2.hp > 0) {
-            this.renderPlayerWin(player2.name);
-            generateLogs("end", player2, player1);
-        } else if (player2.hp <= 0 && player1.hp > 0) {
-            this.renderPlayerWin(player1.name);
-            generateLogs("end", player1, player2);
+        if (this.player1.hp <= 0 && this.player2.hp > 0) {
+            this.renderPlayerWin(this.player2.name);
+            this.logs.generateLogs("end", this.player2, this.player1);
+        } else if (this.player2.hp <= 0 && this.player1.hp > 0) {
+            this.renderPlayerWin(this.player1.name);
+            this.logs.generateLogs("end", this.player1, this.player2);
         } else {
             this.renderPlayerWin();
-            generateLogs("draw");
+            this.logs.generateLogs("draw");
         }
     }
 
