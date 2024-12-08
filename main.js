@@ -1,144 +1,11 @@
-const LOGS = {
-    start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
-    end: [
-        'Результат удара [playerWins]: [playerLose] - труп',
-        '[playerLose] погиб от удара бойца [playerWins]',
-        'Результат боя: [playerLose] - жертва, [playerWins] - убийца',
-    ],
-    hit: [
-        '[playerDefence] пытался сконцентрироваться, но [playerKick] разбежавшись раздробил копчиком левое ухо врага.',
-        '[playerDefence] расстроился, как вдруг, неожиданно [playerKick] случайно раздробил грудью грудину противника.',
-        '[playerDefence] зажмурился, а в это время [playerKick], прослезившись, раздробил кулаком пах оппонента.',
-        '[playerDefence] чесал <вырезано цензурой>, и внезапно неустрашимый [playerKick] отчаянно размозжил грудью левый бицепс оппонента.',
-        '[playerDefence] задумался, но внезапно [playerKick] случайно влепил грубый удар копчиком в пояс оппонента.',
-        '[playerDefence] ковырялся в зубах, но [playerKick] проснувшись влепил тяжелый удар пальцем в кадык врага.',
-        '[playerDefence] вспомнил что-то важное, но внезапно [playerKick] зевнув, размозжил открытой ладонью челюсть противника.',
-        '[playerDefence] осмотрелся, и в это время [playerKick] мимоходом раздробил стопой аппендикс соперника.',
-        '[playerDefence] кашлянул, но внезапно [playerKick] показав палец, размозжил пальцем грудь соперника.',
-        '[playerDefence] пытался что-то сказать, а жестокий [playerKick] проснувшись размозжил копчиком левую ногу противника.',
-        '[playerDefence] забылся, как внезапно безумный [playerKick] со скуки, влепил удар коленом в левый бок соперника.',
-        '[playerDefence] поперхнулся, а за это [playerKick] мимоходом раздробил коленом висок врага.',
-        '[playerDefence] расстроился, а в это время наглый [playerKick] пошатнувшись размозжил копчиком губы оппонента.',
-        '[playerDefence] осмотрелся, но внезапно [playerKick] робко размозжил коленом левый глаз противника.',
-        '[playerDefence] осмотрелся, а [playerKick] вломил дробящий удар плечом, пробив блок, куда обычно не бьют оппонента.',
-        '[playerDefence] ковырялся в зубах, как вдруг, неожиданно [playerKick] отчаянно размозжил плечом мышцы пресса оппонента.',
-        '[playerDefence] пришел в себя, и в это время [playerKick] провел разбивающий удар кистью руки, пробив блок, в голень противника.',
-        '[playerDefence] пошатнулся, а в это время [playerKick] хихикая влепил грубый удар открытой ладонью по бедрам врага.',
-    ],
-    defence: [
-        '[playerKick] потерял момент и храбрый [playerDefence] отпрыгнул от удара открытой ладонью в ключицу.',
-        '[playerKick] не контролировал ситуацию, и потому [playerDefence] поставил блок на удар пяткой в правую грудь.',
-        '[playerKick] потерял момент и [playerDefence] поставил блок на удар коленом по селезенке.',
-        '[playerKick] поскользнулся и задумчивый [playerDefence] поставил блок на тычок головой в бровь.',
-        '[playerKick] старался провести удар, но непобедимый [playerDefence] ушел в сторону от удара копчиком прямо в пятку.',
-        '[playerKick] обманулся и жестокий [playerDefence] блокировал удар стопой в солнечное сплетение.',
-        '[playerKick] не думал о бое, потому расстроенный [playerDefence] отпрыгнул от удара кулаком куда обычно не бьют.',
-        '[playerKick] обманулся и жестокий [playerDefence] блокировал удар стопой в солнечное сплетение.'
-    ],
-    draw: 'Ничья - это тоже победа!'
-};
-
-const HERO_NAME = {
-    SCORPION: "./assets/players/fightingStance/scorpion.gif",
-    SUBZERO: "./assets/players/fightingStance/subzero.gif",
-    CYRAX: "./assets/players/fightingStance/cyrax.gif",
-    ERMAC: "./assets/players/fightingStance/ermac.gif",
-    JADE: "./assets/players/fightingStance/jade.gif",
-    JAX: "./assets/players/fightingStance/jax.gif",
-    KABAL: "./assets/players/fightingStance/kabal.gif",
-    KANO: "./assets/players/fightingStance/kano.gif",
-    KITANA: "./assets/players/fightingStance/kitana.gif",
-    KUNGLAO: "./assets/players/fightingStance/kunglao.gif",
-    LIUKANG: "./assets/players/fightingStance/liukang.gif",
-    MILEENA: "./assets/players/fightingStance/mileena.gif",
-    MOTARO: "./assets/players/fightingStance/motaro.gif",
-    NIGTHWULF: "./assets/players/fightingStance/nigthwulf.gif",
-    NOOBSAIBOT: "./assets/players/fightingStance/noobsaibot.gif",
-    RAIN: "./assets/players/fightingStance/rain.gif",
-    REPTILE: "./assets/players/fightingStance/reptile.gif",
-    SEKTOR: "./assets/players/fightingStance/sektor.gif",
-    SHANGTSUNG: "./assets/players/fightingStance/shangtsung.gif",
-    SHAOKAHN: "./assets/players/fightingStance/shaokahn.gif",
-    SHEEVA: "./assets/players/fightingStance/sheeva.gif",
-    SINDEL: "./assets/players/fightingStance/sindel.gif",
-    SMOKE: "./assets/players/fightingStance/smoke.gif",
-    SONYA: "./assets/players/fightingStance/sonya.gif",
-    STRYKER: "./assets/players/fightingStance/stryker.gif",
-}
-
-const HIT = {
-    head: 70,
-    body: 35,
-    foot: 25,
-}
-const ATTACK = ['head', 'body', 'foot'];
+import {getRandomNumber, createHtmlElement, getTime} from "./utils";
+import {HERO_NAME, HIT, ATTACK} from "./constants";
+import Player from "./Player";
+import {generateLogs} from "./logs";
+import Game from "./game";
 
 const arenasElement = document.querySelector('.arenas');
 const formControlElement = document.querySelector('.control');
-const chatElement = document.querySelector('.chat');
-
-/**
- * Creates an HTML element with the specified tag, class name, and children.
- *
- * @param {string} [tag='div'] - The HTML tag name to create (e.g., 'div', 'span', 'p').
- * @param {string} [className] - The CSS class name(s) to add to the element. Defaults to `undefined`.
- * @param {Array<HTMLElement> | string} [content] - An array of child HTML elements or string to append to the created element. Defaults to `undefined`.
- * @returns {HTMLElement} - The newly created HTML element with the specified properties.
- */
-const createHtmlElement = (tag = 'div', className, content) => {
-    const element = document.createElement(tag);
-
-    if (className) {
-        element.classList.add(className);
-    }
-
-    if (typeof content === 'string') {
-        element.textContent = content;
-    }
-
-    if (Array.isArray(content)) {
-        content.forEach((item) => {
-            element.appendChild(item)
-        })
-    }
-
-    return element;
-}
-
-const getRandomNumber = (min = 1, max = 20) => {
-    return Math.ceil(Math.random() * (max - min + 1)) + min;
-}
-
-function changeHP(damage) {
-    this.hp -= damage;
-
-    if (this.hp < 0) {
-        this.hp = 0;
-    }
-}
-
-function elHP() {
-    return document.querySelector(`.player${this.id} .life`)
-}
-
-function renderHP() {
-    this.elHP().style.width = `${this.hp}%`;
-}
-
-const createPlayer = ({id, name, hp, img}) => {
-    const imageElement = createHtmlElement("img")
-    imageElement.setAttribute("src", img);
-
-    const nameElement = createHtmlElement("div", "name", name)
-    const lifeElement = createHtmlElement("div", "life")
-    lifeElement.style.width = `${hp}%`;
-
-    const characterElement = createHtmlElement("div", "character", [imageElement])
-    const progressbarElement = createHtmlElement("div", "progressbar", [lifeElement, nameElement])
-    const playerElement = createHtmlElement("div", `player${id}`, [progressbarElement, characterElement])
-
-    arenasElement.appendChild(playerElement);
-}
 
 /**
  *
@@ -216,73 +83,6 @@ const showResult = (formControlElement, player1, player2) => {
     }
 }
 
-const formattedTime = (time) => time < 10 ? `0${time}` : time;
-
-const getTime = () => {
-    const date = new Date();
-
-    return `${formattedTime(date.getHours())}:${formattedTime(date.getMinutes())}:${formattedTime(date.getSeconds())}`;
-}
-
-/**
- *
- * @param actionType
- * @param [player1Name]
- * @param [player2Name]
- * @param [hp]
- * @param [damage]
- * @returns {*|string}
- */
-const actionLogResult = (actionType, { name: player1Name } = {}, { name: player2Name, hp } = {}, damage) => {
-    const formatTime = getTime()
-
-    const text = actionType === "start" || actionType ==="draw"
-        ? LOGS[actionType]
-        : LOGS[actionType][getRandomNumber(0, LOGS[actionType].length - 1)]
-
-    switch (actionType) {
-        case "start":
-            return text
-                .replace("[time]", formatTime)
-                .replace("[player1]", player1Name)
-                .replace("[player2]", player2Name);
-        case "end":
-            return `${formatTime} - ${text}`
-                .replace("[playerWins]", player1Name)
-                .replace("[playerLose]", player2Name);
-        case "hit":
-            return `${formatTime} - ${text} [-${damage}] [${hp}/100]`
-                .replace("[playerKick]", player1Name)
-                .replace("[playerDefence]", player2Name);
-        case "defence":
-            return `${formatTime} - ${text}`
-                .replace("[playerDefence]", player1Name)
-                .replace("[playerKick]", player2Name);
-        case "draw":
-            return `${formatTime} - ${text}`
-        default:
-            return "Unexpected type in generateLogs:" + actionType;
-    }
-}
-
-/**
- *
- * @param {string} type
- * @param [player1]
- * @param [player2]
- * @param [damage]
- */
-const generateLogs = (type, player1, player2, damage = 0) => {
-
-
-    const log = actionLogResult(type, player1, player2, damage);
-
-    const logMessage = document.createElement("p");
-    logMessage.textContent = log;
-
-    chatElement.insertAdjacentElement("afterbegin", logMessage);
-}
-
 const roundResult = (Hit, Defence, playerDefense, playerAttack, damage) => {
     if (Hit === Defence) {
         generateLogs("defence", playerDefense, playerAttack);
@@ -309,30 +109,35 @@ formControlElement.addEventListener("submit", (e) => {
 });
 
 
-player1 = {
+const player1 = new Player({
     id: 1,
     name: "SCORPION",
     hp: 100,
     img: HERO_NAME.SCORPION,
-    weapon: ["sword", "gun"],
-    changeHP,
-    elHP,
-    renderHP,
-};
+    rootSelector: "arenas"
+});
 
-player2 = {
+const player2 = new Player({
     id: 2,
     name: "SUB-ZERO",
     hp: 100,
     img: HERO_NAME.SUBZERO,
-    weapon: ["sword", "gun"],
-    changeHP,
-    elHP,
-    renderHP,
-};
+    rootSelector: "arenas"
+});
+
+function init() {
+
+    player1.createPlayer();
+    player2.createPlayer();
+
+    generateLogs("start", player1, player2);
+}
+
+init()
 
 
-createPlayer(player1);
-createPlayer(player2);
-generateLogs("start", player1, player2);
+// const game = new Game({root: arenasElement});
+//
+// game.start();
+
 
