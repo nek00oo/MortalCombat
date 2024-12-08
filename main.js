@@ -106,7 +106,7 @@ const createHtmlElement = (tag = 'div', className, content) => {
 }
 
 const getRandomNumber = (min = 1, max = 20) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.ceil(Math.random() * (max - min + 1)) + min;
 }
 
 function changeHP(damage) {
@@ -125,25 +125,29 @@ function renderHP() {
     this.elHP().style.width = `${this.hp}%`;
 }
 
-const createPlayer = (player) => {
+const createPlayer = ({id, name, hp, img}) => {
     const imageElement = createHtmlElement("img")
-    imageElement.setAttribute("src", player.img);
+    imageElement.setAttribute("src", img);
 
-    const nameElement = createHtmlElement("div", "name", player.name)
+    const nameElement = createHtmlElement("div", "name", name)
     const lifeElement = createHtmlElement("div", "life")
-    lifeElement.style.width = `${player.hp}%`;
+    lifeElement.style.width = `${hp}%`;
 
     const characterElement = createHtmlElement("div", "character", [imageElement])
     const progressbarElement = createHtmlElement("div", "progressbar", [lifeElement, nameElement])
-    const playerElement = createHtmlElement("div", `player${player.id}`, [progressbarElement, characterElement])
+    const playerElement = createHtmlElement("div", `player${id}`, [progressbarElement, characterElement])
 
     arenasElement.appendChild(playerElement);
 }
 
-const renderPlayerWin = (name) => {
-    const result = name ? `${name} wins` : "draw"
+/**
+ *
+ * @param {string} [winnerName]
+ */
+const renderPlayerWin = (winnerName) => {
+    const resultTitleText = winnerName ? `${winnerName} wins` : "draw"
 
-    const resultTitle = createHtmlElement("div", "winTitle", result);
+    const resultTitle = createHtmlElement("div", "winTitle", resultTitleText);
     arenasElement.appendChild(resultTitle);
 }
 
@@ -187,14 +191,14 @@ const playerAttack = (formControlElement) => {
 }
 
 const showResult = (formControlElement, player1, player2) => {
-    const reloadButtonElement = createReloadButton()
+    const reloadButtonElement = createReloadButton();
 
-    reloadButtonElement.addEventListener('click', () => {
+    reloadButtonElement.addEventListener("click", () => {
         window.location.reload();
     })
 
     if (player1.hp === 0 || player2.hp === 0) {
-        reloadButtonElement.style.display = 'block';
+        reloadButtonElement.style.display = "block";
         for (let item of formControlElement) {
             item.disabled = true;
         }
@@ -208,6 +212,7 @@ const showResult = (formControlElement, player1, player2) => {
         generateLogs("end", player1, player2);
     } else {
         renderPlayerWin();
+        generateLogs("draw");
     }
 }
 
@@ -219,43 +224,63 @@ const getTime = () => {
     return `${formattedTime(date.getHours())}:${formattedTime(date.getMinutes())}:${formattedTime(date.getSeconds())}`;
 }
 
-const actionLogResult = (actionType, text, player1, player2, damage) => {
+/**
+ *
+ * @param actionType
+ * @param [player1Name]
+ * @param [player2Name]
+ * @param [hp]
+ * @param [damage]
+ * @returns {*|string}
+ */
+const actionLogResult = (actionType, { name: player1Name } = {}, { name: player2Name, hp } = {}, damage) => {
     const formatTime = getTime()
 
+    const text = actionType === "start" || actionType ==="draw"
+        ? LOGS[actionType]
+        : LOGS[actionType][getRandomNumber(0, LOGS[actionType].length - 1)]
+
     switch (actionType) {
-        case 'start':
+        case "start":
             return text
-                .replace('[time]', formatTime)
-                .replace('[player1]', player1.name)
-                .replace('[player2]', player2.name);
-        case 'end':
+                .replace("[time]", formatTime)
+                .replace("[player1]", player1Name)
+                .replace("[player2]", player2Name);
+        case "end":
             return `${formatTime} - ${text}`
-                .replace('[playerWins]', player1.name)
-                .replace('[playerLose]', player2.name);
-        case 'hit':
-            return `${formatTime} - ${text} [-${damage}] [${player2.hp}/100]`
-                .replace('[playerKick]', player1.name)
-                .replace('[playerDefence]', player2.name);
-        case 'defence':
+                .replace("[playerWins]", player1Name)
+                .replace("[playerLose]", player2Name);
+        case "hit":
+            return `${formatTime} - ${text} [-${damage}] [${hp}/100]`
+                .replace("[playerKick]", player1Name)
+                .replace("[playerDefence]", player2Name);
+        case "defence":
             return `${formatTime} - ${text}`
-                .replace('[playerDefence]', player1.name)
-                .replace('[playerKick]', player2.name);
+                .replace("[playerDefence]", player1Name)
+                .replace("[playerKick]", player2Name);
+        case "draw":
+            return `${formatTime} - ${text}`
         default:
-            return  "Unexpected type in generateLogs:" + actionType;
+            return "Unexpected type in generateLogs:" + actionType;
     }
 }
 
+/**
+ *
+ * @param {string} type
+ * @param [player1]
+ * @param [player2]
+ * @param [damage]
+ */
 const generateLogs = (type, player1, player2, damage = 0) => {
 
-    const text = type.includes("start", "draw")
-        ? LOGS[type]
-        : LOGS[type][getRandomNumber(0, LOGS[type].length - 1)]
-    const log = actionLogResult(type, text, player1, player2, damage);
+
+    const log = actionLogResult(type, player1, player2, damage);
 
     const logMessage = document.createElement("p");
     logMessage.textContent = log;
 
-    chatElement.insertAdjacentElement('afterbegin', logMessage);
+    chatElement.insertAdjacentElement("afterbegin", logMessage);
 }
 
 const roundResult = (Hit, Defence, playerDefense, playerAttack, damage) => {
@@ -269,14 +294,14 @@ const roundResult = (Hit, Defence, playerDefense, playerAttack, damage) => {
     }
 }
 
-formControlElement.addEventListener('submit', (e) => {
+formControlElement.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const enemy = enemyAttack();
-    const attack = playerAttack(formControlElement);
+    const {hit: hitEnemy, defence: defenceEnemy, value: valueEnemy} = enemyAttack();
+    const {hit: hitPlayer, defence: defencePlayer, value: valuePlayer} = playerAttack(formControlElement);
 
-    roundResult(enemy.hit, attack.defence, player1, player2, enemy.value);
-    roundResult(attack.hit, enemy.defence, player2, player1, attack.value);
+    roundResult(hitEnemy, defencePlayer, player1, player2, valueEnemy);
+    roundResult(hitPlayer, defenceEnemy, player2, player1, valuePlayer);
 
     if (player1.hp === 0 || player2.hp === 0) {
         showResult(formControlElement, player1, player2);
