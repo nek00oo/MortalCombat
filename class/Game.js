@@ -12,10 +12,11 @@ class Game {
 
         this.player1 = new Player(JSON.parse(localStorage.getItem("player1")));
 
+        const {name, img} = this.getRandomEnemy();
         this.player2 = new Player({
             id: 2,
-            name: "NIGHTWOLF",
-            img: HERO_NAME.NIGHTWOLF,
+            name: name,
+            img: img,
         })
     }
 
@@ -129,6 +130,13 @@ class Game {
         this.root.appendChild(reloadButtonContainer);
 
         return reloadButtonElement;
+    }
+
+    getRandomEnemy = () => {
+        const heroEntries = Object.entries(HERO_NAME);
+        const randomIndex = getRandomNumber(0, heroEntries.length - 1);
+        const [name, img] = heroEntries[randomIndex];
+        return { name, img };
     }
 }
 
