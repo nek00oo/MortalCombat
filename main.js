@@ -1,9 +1,9 @@
 import Game from "./class/Game.js";
 
-const arenasElement = document.querySelector('.arenas');
-const chatElement = document.querySelector('.chat');
+const $arenas = document.querySelector('.arenas');
+const $chat = document.querySelector('.chat');
 
-const game = new Game({root: arenasElement, chat: chatElement});
+const game = new Game({root: $arenas, chat: $chat});
 
 game.start();
 

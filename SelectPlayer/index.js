@@ -1,7 +1,10 @@
-import {HERO_NAME} from "../constants";
+import PlayersRepository from "./PlayersRepository.js";
+import {HERO_MAP} from "../constants";
 
 const $parent = document.querySelector('.parent');
 const $player = document.querySelector('.player');
+
+const playersRepository = new PlayersRepository(HERO_MAP);
 
 const createElement = (tag, className) => {
     const $tag = document.createElement(tag);
@@ -27,59 +30,6 @@ function createEmptyPlayerBlock() {
     $parent.appendChild(el);
 }
 
-class Player {
-    constructor({
-                    id,
-                    name,
-                    img,
-                    avatar,
-                }) {
-        this.id = id;
-        this.name = name;
-        this.img = img;
-        this.avatar = avatar;
-    }
-}
-
-const playerData = [
-    { name: "RAIN", img: HERO_NAME.RAIN },
-    { name: "REPTILE", img: HERO_NAME.REPTILE },
-    { name: "SHAOKAHN", img: HERO_NAME.SHAOKAHN },
-    { name: "ERMAC", img: HERO_NAME.ERMAC },
-    { name: "NIGHTWOLF", img: HERO_NAME.NIGHTWOLF },
-    { name: "JADE", img: HERO_NAME.JADE },
-    { name: "NOOBSAIBOT", img: HERO_NAME.NOOBSAIBOT },
-    { name: "SONYA", img: HERO_NAME.SONYA },
-    { name: "JAX", img: HERO_NAME.JAX },
-    { name: "REPTILE", img: HERO_NAME.REPTILE },
-    { name: "REPTILE", img: HERO_NAME.REPTILE },
-    { name: "STRYKER", img: HERO_NAME.STRYKER },
-    { name: "SUBZERO", img: HERO_NAME.SUBZERO },
-    { name: "KUNGLAO", img: HERO_NAME.KUNGLAO },
-    { name: "SEKTOR", img: HERO_NAME.SEKTOR },
-    { name: "KITANA", img: HERO_NAME.KITANA },
-    { name: "SCORPION", img: HERO_NAME.SCORPION },
-    { name: "SCORPION", img: HERO_NAME.SCORPION },
-    { name: "CYRAX", img: HERO_NAME.CYRAX },
-    { name: "KABAL", img: HERO_NAME.KABAL },
-    { name: "SINDEL", img: HERO_NAME.SINDEL },
-    { name: "SMOKE", img: HERO_NAME.SMOKE },
-    { name: "LIUKANG", img: HERO_NAME.LIUKANG },
-    { name: "SHANGTSUNG", img: HERO_NAME.SHANGTSUNG }
-];
-
-const players = [];
-
-for (let i = 0; i < playerData.length; i++) {
-    const player = new Player({
-        id: i + 1,
-        name: playerData[i].name,
-        img: playerData[i].img,
-        hp: 100,
-        avatar: `../assets/players/avatar/${i + 1}.png`
-    });
-    players.push(player);
-}
 
 async function init() {
     localStorage.removeItem('player1');
@@ -87,8 +37,7 @@ async function init() {
     let imgSrc = null;
     createEmptyPlayerBlock();
 
-
-    players.forEach(item => {
+    playersRepository.getPlayers().forEach(item => {
         const el = createElement('div', ['character', `div${item.id}`]);
         const img = createElement('img');
 

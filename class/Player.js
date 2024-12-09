@@ -5,11 +5,13 @@ class Player {
                     id,
                     name,
                     img,
+                    avatar,
                     hp,
                 }) {
         this.id = id;
         this.name = name;
         this.img = img;
+        this.avatar = avatar;
         this.selector = `player${this.id}`;
         this.hp = hp ? hp : 100;
     }

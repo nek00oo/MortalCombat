@@ -1,5 +1,5 @@
 import Logs from "./Logs.js";
-import {ATTACK, HERO_NAME, HIT} from "../constants";
+import {ATTACK, HERO_MAP, HIT} from "../constants";
 import {createHtmlElement, getRandomNumber} from "../utils";
 import Player from "./Player.js";
 
@@ -133,11 +133,11 @@ class Game {
     }
 
     getRandomEnemy = () => {
-        const heroEntries = Object.entries(HERO_NAME);
+        const heroEntries = Object.entries(HERO_MAP);
         const randomIndex = getRandomNumber(0, heroEntries.length - 1);
         const [name, img] = heroEntries[randomIndex];
         return { name, img };
     }
 }
 
-export default Game
+export default Game;
