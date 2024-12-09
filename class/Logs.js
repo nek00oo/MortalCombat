@@ -1,20 +1,32 @@
 import {getRandomNumber, getTime} from "../utils";
 import {LOGS} from "../constants";
 
-
+/**
+ * Manages and logs actions in the chat.
+ *
+ * @class
+ */
 class Logs {
+    /**
+     * Creates an instance of the Logs class.
+     *
+     * @param {HTMLElement} chat - The container element where logs will be displayed.
+     */
     constructor(chat) {
         this.root = chat;
     }
 
     /**
+     * Generates a log message based on the action performed in the game.
      *
-     * @param actionType
-     * @param [player1Name]
-     * @param [player2Name]
-     * @param [hp]
-     * @param [damage]
-     * @returns {*|string}
+     * @param {string} actionType - The type of action performed (e.g., 'start', 'hit', 'defence', 'end', 'draw').
+     * @param {Object} [player1] - The first player's details.
+     * @param {string} [player1.name] - The name of the first player.
+     * @param {Object} [player2] - The second player's details.
+     * @param {string} [player2.name] - The name of the second player.
+     * @param {number} [player2.hp] - The current health points of the second player.
+     * @param {number} [damage] - The damage dealt in the action (for 'hit' actions).
+     * @returns {string} The formatted log message.
      */
     actionLogResult = (actionType, {name: player1Name} = {}, {name: player2Name, hp} = {}, damage) => {
         const formatTime = getTime()
@@ -49,11 +61,14 @@ class Logs {
     }
 
     /**
+     * Generates and displays a log message in the chat container.
      *
-     * @param {string} type
-     * @param [player1]
-     * @param [player2]
-     * @param [damage]
+     * @param {string} type - The type of action to log.
+     * @param {Object} [player1] - The first player's details.
+     * @param {string} [player1.name] - The name of the first player.
+     * @param {Object} [player2] - The second player's details.
+     * @param {string} [player2.name] - The name of the second player.
+     * @param {number} [damage] - The damage dealt in the action.
      */
     generateLogs = (type, player1, player2, damage = 0) => {
         const log = this.actionLogResult(type, player1, player2, damage);

@@ -31,7 +31,7 @@ function createEmptyPlayerBlock() {
 }
 
 
-async function init() {
+function init() {
     localStorage.removeItem('player1');
 
     let imgSrc = null;

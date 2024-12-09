@@ -30,6 +30,12 @@ export const createHtmlElement = (tag = 'div', className, content) => {
 
 const formattedTime = (time) => time < 10 ? `0${time}` : time;
 
+/**
+ * Gets the current time in the format 'HH:mm:ss'.
+ *
+ * @function
+ * @returns {string} The current time.
+ */
 export const getTime = () => {
     const date = new Date();
 

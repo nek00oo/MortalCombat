@@ -70,4 +70,5 @@ export const HIT = {
     body: 35,
     foot: 25,
 }
+
 export const ATTACK = ['head', 'body', 'foot'];

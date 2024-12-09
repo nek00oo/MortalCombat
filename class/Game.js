@@ -3,8 +3,19 @@ import {ATTACK, HERO_MAP, HIT} from "../constants";
 import {createHtmlElement, getRandomNumber} from "../utils";
 import Player from "./Player.js";
 
-
+/**
+ * Represents a game instance managing players, logs, and the game flow.
+ *
+ * @class
+ */
 class Game {
+    /**
+     * Creates an instance of the Game class.
+     *
+     * @param {Object} options - Configuration options for the game.
+     * @param {HTMLElement} options.root - The root element where the game will be rendered.
+     * @param {HTMLElement} options.chat - The chat element where logs will be displayed.
+     */
     constructor({root, chat}) {
         this.root = root;
         this.form = root.querySelector('.control');
@@ -20,6 +31,9 @@ class Game {
         })
     }
 
+    /**
+     * Starts the game by rendering players and setting up the result submission.
+     */
     start = () => {
         this.root.appendChild(this.player1.createPlayer());
         this.root.appendChild(this.player2.createPlayer());
@@ -29,6 +43,9 @@ class Game {
         this.logs.generateLogs("start", this.player1, this.player2);
     }
 
+    /**
+     * Handles the submission of the attack results.
+     */
     submitResult = () => {
         this.form.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -45,6 +62,11 @@ class Game {
         });
     }
 
+    /**
+     * Simulates an enemy attack and generates the attack details.
+     *
+     * @returns {Object} The details of the enemy attack, including hit type, defence type, and damage value.
+     */
     enemyAttack = () => {
         const hit = ATTACK[getRandomNumber(0, ATTACK.length - 1)];
         const defence = ATTACK[getRandomNumber(0, ATTACK.length - 1)];
@@ -56,6 +78,11 @@ class Game {
         };
     }
 
+    /**
+     * Handles the player's attack by reading the selected hits and defenses from the form.
+     *
+     * @returns {Object} The details of the player's attack, including hit type and defence type.
+     */
     playerAttack = () => {
         const attack = {};
 
@@ -75,6 +102,16 @@ class Game {
         return attack;
     }
 
+
+    /**
+     * Calculates and logs the result of a round based on hit and defence values.
+     *
+     * @param {string} Hit - The hit type during the round.
+     * @param {string} Defence - The defence type during the round.
+     * @param {Player} playerDefense - The defending player.
+     * @param {Player} playerAttack - The attacking player.
+     * @param {number} damage - The damage value inflicted.
+     */
     roundResult = (Hit, Defence, playerDefense, playerAttack, damage) => {
         if (Hit === Defence) {
             this.logs.generateLogs("defence", playerDefense, playerAttack);
@@ -86,6 +123,10 @@ class Game {
         }
     }
 
+
+    /**
+     * Displays the result of the game and resets the game state if needed.
+     */
     showResult = () => {
         const reloadButtonElement = this.createReloadButton();
 
@@ -113,8 +154,9 @@ class Game {
     }
 
     /**
+     * Renders the win message for the player or displays "draw".
      *
-     * @param {string} [winnerName]
+     * @param {string} [winnerName] - The name of the winning player. If no name is provided, "draw" will be shown.
      */
     renderPlayerWin = (winnerName) => {
         const resultTitleText = winnerName ? `${winnerName} wins` : "draw"
@@ -123,6 +165,11 @@ class Game {
         this.root.appendChild(resultTitle);
     }
 
+    /**
+     * Creates and returns a reload button for restarting the game.
+     *
+     * @returns {HTMLElement} The reload button element.
+     */
     createReloadButton = () => {
         const reloadButtonElement = createHtmlElement("button", "button", "Restart");
         const reloadButtonContainer = createHtmlElement("div", "reloadWrap", [reloadButtonElement]);
@@ -132,6 +179,11 @@ class Game {
         return reloadButtonElement;
     }
 
+    /**
+     * Selects a random enemy from the predefined HERO_MAP.
+     *
+     * @returns {Object} The randomly selected enemy's name and image.
+     */
     getRandomEnemy = () => {
         const heroEntries = Object.entries(HERO_MAP);
         const randomIndex = getRandomNumber(0, heroEntries.length - 1);
